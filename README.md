@@ -1,2 +1,2 @@
 # pi-slajder
-Slideviwer with updates from dropbox.
+Slideviewer with updates from dropbox.
