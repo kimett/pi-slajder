@@ -1,11 +1,18 @@
 #!/bin/bash
-mkdir -p /home/pi/temp_slide
-rm -rf /home/pi/temp_slide/*
+TARGET=/home/pi/B2G_Prod
+OLDTARGET=/home/pi/B2G_Prod_old
+TMPDIR=$(mktemp -d)
 
-/home/pi/Dropbox-Uploader/dropbox_uploader.sh download /Back2Game\ Produktion /home/pi/temp_slide/#Move to parameter
 
-rm -rf /home/pi/B2G_Prod/*
-cp -r /home/pi/temp_slide/* /home/pi/B2G_Prod/
-#TODO: diff and if difference kill fbi process
+/home/pi/Dropbox-Uploader/dropbox_uploader.sh download /Back2Game\ Produktion $TMPDIR #Move to parameter
 
-killall fbi
+diff <(cd $TARGET; sha256sum $(find . -type f|sort)) <(cd $TMPDIR; sha256sum $(find . -type f|sort))
+if $?; then
+	mv $TARGET $OLDTARGET
+	mv $TMPDIR $TARGET
+
+	killall fbi
+else
+	rm -Rf $TMPDIR
+fi
+
