@@ -8,6 +8,7 @@ TMPDIR=$(mktemp -d)
 
 diff <(cd $TARGET; sha256sum $(find . -type f|sort)) <(cd $TMPDIR; sha256sum $(find . -type f|sort))
 if $?; then
+	rm -rf $OLDTARGET
 	mv $TARGET $OLDTARGET
 	mv $TMPDIR $TARGET
 
